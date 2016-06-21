@@ -1,0 +1,158 @@
+﻿-----------------------------------------------------------------------------
+Rev_1_021      03-Apr-2016
+-----------------------------------------------------------------------------
+
+SermonPodcastPages application: file location parameters are now project
+Settings rather than constants in the mainline code.
+Application rebuild with Visual Studio 2015 Community Edition.
+
+-----------------------------------------------------------------------------
+Rev_1_020      01-Apr-2016
+-----------------------------------------------------------------------------
+
+Backup main form widened: the status lines in the application were sometimes
+not entirely visible.
+Application rebuild with Visual Studio 2015 Community Edition.
+
+-----------------------------------------------------------------------------
+Rev_1_019      24-Mar-2013
+-----------------------------------------------------------------------------
+
+Speak project was in solution but not in CVS, so solution checked out of CVS
+would not build. Here corrected.
+
+-----------------------------------------------------------------------------
+Rev_1_018      13-Mar-2013
+-----------------------------------------------------------------------------
+
+Backup form now shows size of archive, and time to backup each archive.
+Now includes basic exception handling.
+
+-----------------------------------------------------------------------------
+Rev_1_017      04-Jan-2011
+-----------------------------------------------------------------------------
+
+Backup zip files are now password protected (password in Properties
+Settings). This is a precautionary measure in case the backup media is lost.
+
+-----------------------------------------------------------------------------
+Rev_1_016      09-Jan-2010
+-----------------------------------------------------------------------------
+
+Disk stats now show percentage free space on each drive.
+
+-----------------------------------------------------------------------------
+Rev_1_015      29-Dec-2009
+-----------------------------------------------------------------------------
+
+CVS versions in a mess: Rev_1_014 tag already existed when checking in the
+previous change. Check it in again as Rev_1_015.
+
+-----------------------------------------------------------------------------
+Rev_1_014      29-Dec-2009
+-----------------------------------------------------------------------------
+
+[1] Now handles the exception that was thrown if any backup item did not
+    exist.
+[2] Previously displayed the disk stats for the C: drive on completion - now
+    displays the disk stats for each drive from which backups are taken.
+
+-----------------------------------------------------------------------------
+Rev_1_013      25-Aug-2009
+-----------------------------------------------------------------------------
+
+"Add" and "Delete" context menu items now working.
+
+-----------------------------------------------------------------------------
+Rev_1_012      24-Aug-2009
+-----------------------------------------------------------------------------
+
+Can now use the Context menu to add new items to, or delete items from, the
+backup list. However, at present, only a list in memory is changed. The
+revised list must be saved to filestore, and the listbox refreshed.
+
+-----------------------------------------------------------------------------
+Rev_1_011      22-Aug-2009
+-----------------------------------------------------------------------------
+
+Context menu added, to enable addition to and removal from the backup list.
+These actions are not yet implemented.
+
+-----------------------------------------------------------------------------
+Rev_1_010      17-Aug-2009
+-----------------------------------------------------------------------------
+
+Now shows elapsed time for backup.
+
+-----------------------------------------------------------------------------
+Rev_1_009      15-Aug-2009
+-----------------------------------------------------------------------------
+
+[1] Bug-fix: display of disk summary stats failed.
+[2] Disk summary stats moved into listbox rather than displayed as labels.
+
+-----------------------------------------------------------------------------
+Rev_1_008      10-Aug-2009
+-----------------------------------------------------------------------------
+
+Form now displays disk space summary when complete.
+
+-----------------------------------------------------------------------------
+Rev_1_007      31-Jul-2009
+-----------------------------------------------------------------------------
+
+app.config was missing from CVS - now added.
+
+-----------------------------------------------------------------------------
+Rev_1_006      31-Jul-2009
+-----------------------------------------------------------------------------
+
+Following the first test:
+[1] Listbox is now invalidated on each timer tick (otherwise it was not being
+    redrawn and showing progress.
+[2] Cosmetic changes: listbox items in regular font rather than bold;
+    standard styling applied to the dialog.
+
+-----------------------------------------------------------------------------
+Rev_1_005      30-Jul-2009
+-----------------------------------------------------------------------------
+
+FormMain now holds an owner-draw listbox showing the items to be backed up,
+and colour indicating current status. Testing is outstanding.
+
+-----------------------------------------------------------------------------
+Rev_1_004      28-Jul-2009
+-----------------------------------------------------------------------------
+
+Implemented code to identify the backup media, and cycle the recent, older
+and oldest folders, and backup to that media. Testing is outstanding.
+
+Created an Outstanding.txt administrative document.
+
+-----------------------------------------------------------------------------
+Rev_1_003      27-Jul-2009
+-----------------------------------------------------------------------------
+
+First use of zip library to create a real backup archive.
+
+Outstanding:
+[1] Currently creates archive at hard-coded location. Need to manage recent,
+    older and oldest folders on any drive.
+[2] Feedback currently comprises only the number of items backed up - should
+    display a list of the items archived.
+[3] No means of modifying the list of folders to be archived.
+
+-----------------------------------------------------------------------------
+Rev_1_002      22-Jul-2009
+-----------------------------------------------------------------------------
+
+Background thread now reads a list of items to be backed up instead of
+simply counting.
+
+-----------------------------------------------------------------------------
+Rev_1_001      21-Jul-2009
+-----------------------------------------------------------------------------
+
+First version in CVS: template program with a background thread.
+
+-----------------------------------------------------------------------------

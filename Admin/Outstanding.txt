@@ -1,0 +1,29 @@
+﻿Outstanding
+
+
+Implemented
+[6] Disk space summary shows stats for C: drive and backup media -
+	C: is a bad assumption; should deduce it from the backup list.
+[8] Program checks for existence of all folders in the backup list
+    before starting the backup.
+
+Rev_1_014
+
+Rev_1_013
+[3] No means of modifying the list of folders to be archived.
+
+Rev_1_010
+[7] Show the time taken for backup when complete.
+
+
+Rev_1_006
+[4] Testing of [1] identification of media and backup cycling
+[5] Testing of [2] visual feedback of owner draw listbox
+
+Rev_1_005
+[2] Feedback currently comprises only the number of items backed up - should
+    display a list of the items archived.
+
+Rev_1_004
+[1] Currently creates archive at hard-coded location. Need to manage recent,
+    older and oldest folders on any drive
