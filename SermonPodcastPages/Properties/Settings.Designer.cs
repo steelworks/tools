@@ -38,12 +38,25 @@ namespace SermonPodcastPages.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("C:\\Users\\graha\\Google Drive\\podcast")]
-        public string DriveLocation {
+        public string LocalDriveLocation {
             get {
-                return ((string)(this["DriveLocation"]));
+                return ((string)(this["LocalDriveLocation"]));
             }
             set {
-                this["DriveLocation"] = value;
+                this["LocalDriveLocation"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("https://a03dda5ab985dca85402cdbefe49ac91faf71a03.googledrive.com/host/0Bzf9aI-ZNy" +
+            "1GUkk3Y2g1SmU0bG8")]
+        public string NetworkDriveLocation {
+            get {
+                return ((string)(this["NetworkDriveLocation"]));
+            }
+            set {
+                this["NetworkDriveLocation"] = value;
             }
         }
     }

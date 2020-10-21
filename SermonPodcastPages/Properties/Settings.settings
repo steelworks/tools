@@ -5,8 +5,11 @@
     <Setting Name="SpreadsheetLocation" Type="System.String" Scope="User">
       <Value Profile="(Default)">C:\Users\graha\OneDrive\Documents\XL\SermonPodcast.xlsx</Value>
     </Setting>
-    <Setting Name="DriveLocation" Type="System.String" Scope="User">
+    <Setting Name="LocalDriveLocation" Type="System.String" Scope="User">
       <Value Profile="(Default)">C:\Users\graha\Google Drive\podcast</Value>
+    </Setting>
+    <Setting Name="NetworkDriveLocation" Type="System.String" Scope="User">
+      <Value Profile="(Default)">https://a03dda5ab985dca85402cdbefe49ac91faf71a03.googledrive.com/host/0Bzf9aI-ZNy1GUkk3Y2g1SmU0bG8</Value>
     </Setting>
   </Settings>
 </SettingsFile>
