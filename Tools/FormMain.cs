@@ -146,11 +146,17 @@ namespace Backup
             iBackupItems = new List<BackupItem>();
             using (StreamReader backupReader = new StreamReader(backupList))
             {
-                string backupPath;
-                while (((backupPath = backupReader.ReadLine()) != null) &&
-                       (backupPath.Length > 0))
+                string backupRecord;
+                while (((backupRecord = backupReader.ReadLine()) != null) && (backupRecord.Length > 0))
                 {
-                    iBackupItems.Add(new BackupItem(backupPath));
+                    var backupFields = backupRecord.Split(',');
+                    string backupPath = backupFields[0];
+                    uint historicSeconds = 0;
+                    if (backupFields.Length > 1)
+                    {
+                        uint.TryParse(backupFields[1], out historicSeconds);
+                    }
+                    iBackupItems.Add(new BackupItem(backupPath, historicSeconds));
                 }
             }
 
@@ -158,7 +164,7 @@ namespace Backup
             return (iBackupItems.Count > 0);
         }
 
-        private bool SaveBackupList()
+        private bool SaveBackupList(bool refreshDisplay = true)
         {
             string backupList = Properties.Settings.Default.BackupList;
 
@@ -168,7 +174,7 @@ namespace Backup
                 {
                     foreach (BackupItem backupItem in iBackupItems)
                     {
-                        backupWriter.WriteLine(backupItem.Path);
+                        backupWriter.WriteLine($"{backupItem.Path}, {backupItem.HistoricTimeToBackup}");
                     }
                 }
             }
@@ -178,9 +184,12 @@ namespace Backup
                 return false;
             }
 
-            // Refresh the display with the saved backup list
-            filesListBox.Items.Clear();
-            filesListBox.Items.AddRange(iBackupItems.ToArray());
+            if (refreshDisplay)
+            {
+                filesListBox.Items.Clear();
+                filesListBox.Items.AddRange(iBackupItems.ToArray());
+            }
+
             return true;
         }
 
@@ -268,6 +277,10 @@ namespace Backup
             }
             else
             {
+                // Establish progress on current item being backed up
+                var backupItem = iBackupItems[iNumFilesBackedUp];
+                backupItem.TimeToBackup = (DateTime.Now - backupItem.TimeOfStartOfBackup);
+
                 labelComplete.Text = 
                     string.Format("{0:00}:{1:00} Backed up {2} files", 
                                   lapsedTime.Minutes, lapsedTime.Seconds, 
@@ -327,14 +340,16 @@ namespace Backup
                             zip.Password = Properties.Settings.Default.Password;
                         }
 
-                        DateTime start = DateTime.Now;
+                        backupItem.TimeOfStartOfBackup = DateTime.Now;
                         zip.AddDirectory(backupItem.Path);
                         zip.Comment = "This zip was created at " + System.DateTime.Now.ToString("G");
                         zip.Save();
-                        DateTime end = DateTime.Now;
-                        backupItem.TimeToBackup = (end - start);
+                        backupItem.TimeToBackup = (DateTime.Now - backupItem.TimeOfStartOfBackup);
                         backupItem.ArchiveSize = new FileInfo(backupPath).Length;
                         backupItem.Status = "OK";
+                        backupItem.HistoricTimeToBackup = (uint)((backupItem.HistoricTimeToBackup == 0) 
+                            ? backupItem.TimeToBackup.TotalSeconds 
+                            : (backupItem.HistoricTimeToBackup * 0.8) + (backupItem.TimeToBackup.TotalSeconds * 0.2));
                     }
                 }
                 catch (Exception ex)
@@ -344,6 +359,9 @@ namespace Backup
 
                 iNumFilesBackedUp++;
             }
+
+            // Update the backup list with historic timings
+            SaveBackupList(false);
         }
 
         private void filesListBox_DrawItem(object sender, DrawItemEventArgs e)
