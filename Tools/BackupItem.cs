@@ -26,14 +26,15 @@ namespace Backup
 
         public override string ToString()
         {
-            string result = Path;
-
             // The forecast time to backup is taken from historic time, or defaults to 5 minutes if no history
             uint forecastSeconds = HistoricTimeToBackup > 0 ? HistoricTimeToBackup : (uint)TimeSpan.FromMinutes(5).TotalSeconds;
 
-            // Progress can never be greater than 100%
-            uint progressPercent = Math.Min((uint)TimeToBackup.TotalSeconds * 100 / forecastSeconds, 100);
-            result += $": {progressPercent}%";
+            // Progress in terms of tenths complete
+            string progressGauge = string.Empty;
+            uint progressTenths = Math.Min((uint)Math.Round(TimeToBackup.TotalSeconds * 10 / forecastSeconds), 10);
+            for (var tenth = 1; tenth <= progressTenths; tenth++) progressGauge += "*";
+            for (var tenth = progressTenths; tenth < 10; tenth++) progressGauge += "-";
+            string result = $"[{progressGauge}] {Path}";
 
             if (TimeToBackup.TotalSeconds > 0)
             {
