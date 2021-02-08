@@ -261,70 +261,81 @@ namespace SermonPodcastPages
         {
             // If we fail to parse the date, we assume that the row is empty and write no details at all
             DateTime sermonDate;
-            if (DateTime.TryParse(aSermonDetails.ItemArray[kDateColumn].ToString(), out sermonDate))
+            if (!DateTime.TryParse(aSermonDetails.ItemArray[kDateColumn].ToString(), out sermonDate))
             {
-                aWriter.WriteLine(@"<div class=""well"">");
-
-                aWriter.WriteLine(@"<div class=""row"">");
-                string series = aSermonDetails.ItemArray[kSeriesColumn].ToString();
-                if (series.Length > 0)
-                {
-                    aWriter.WriteLine(@"<H3>{0} <SMALL>({1})</SMALL></H3>", aSermonDetails.ItemArray[kTitleColumn].ToString(), series);
-                }
-                else
-                {
-                    aWriter.WriteLine(@"<H3>{0}</H3>", aSermonDetails.ItemArray[kTitleColumn].ToString());
-                }
-                aWriter.WriteLine(@"</div>");
-
-                aWriter.WriteLine(@"  <div class=""row"">");
-                aWriter.WriteLine(@"    <div class=""col-sm-3"" style=""background-color:lavender;"">");
-                aWriter.WriteLine(@"       <p class=""text-primary"">{0}</p>", sermonDate.ToString("d MMM yyyy"));
-                string scripture = aSermonDetails.ItemArray[kScriptureColumn].ToString();
-                if (scripture.Length > 0)
-                {
-                    aWriter.WriteLine(@"       <p>{0}</p>", scripture);
-                }
-                aWriter.WriteLine(@"       <p>{0}</p>", aSermonDetails.ItemArray[kSpeakerColumn].ToString());
-                aWriter.WriteLine(@"    </div>");
-                aWriter.WriteLine(@"    <div class=""col-sm-1"">");
-                aWriter.WriteLine(@"    </div>");
-                aWriter.WriteLine(@"    <div class=""col-sm-8"">");
-                aWriter.WriteLine(@"      <p class=""text-info"">");
-                aWriter.WriteLine(@"        {0}", aSermonDetails.ItemArray[kDescriptionColumn].ToString());
-                aWriter.WriteLine(@"      </p>");
-                aWriter.WriteLine(@"      <p>");
-
-                string audio = aSermonDetails.ItemArray[kFileColumn].ToString();
-                ValidateAudio(audio, aYear);
-                string networkDriveLocation = Properties.Settings.Default.NetworkDriveLocation; // Where the MP3 resources are located on the internet
-                aWriter.WriteLine(@"    <a href=""{0}/{1}/{2}"" target=""_blank"" class=""btn btn-info"">", networkDriveLocation, aYear, audio);
-                aWriter.WriteLine(@"      <span class=""glyphicon glyphicon-play""></span> Play");
-                aWriter.WriteLine(@"    </a>");
-
-                aWriter.WriteLine(@"      </p>");
-                DateTime duration;
-                string durationString = string.Empty;
-                if (DateTime.TryParse(aSermonDetails.ItemArray[kDurationColumn].ToString(), out duration))
-                {
-                    aWriter.WriteLine(@"      <p class=""text-info"">");
-                    aWriter.WriteLine(@"        duration: " + duration.ToLongTimeString());
-                    aWriter.WriteLine(@"      </p>");
-                }
-                aWriter.WriteLine(@"    </div>");
-                aWriter.WriteLine(@"</div>");
-
-                aWriter.WriteLine(@"</div>");
+                return;
             }
+
+            // Skip the entry if the audio is not present, eg, no recording, or if we recorded but agreed not to publish the message
+            string audio = aSermonDetails.ItemArray[kFileColumn].ToString();
+            if (!ValidateAudio(audio, aYear))
+            {
+                return;
+            }
+
+            aWriter.WriteLine(@"<div class=""well"">");
+
+            aWriter.WriteLine(@"<div class=""row"">");
+            string series = aSermonDetails.ItemArray[kSeriesColumn].ToString();
+            if (series.Length > 0)
+            {
+                aWriter.WriteLine(@"<H3>{0} <SMALL>({1})</SMALL></H3>", aSermonDetails.ItemArray[kTitleColumn].ToString(), series);
+            }
+            else
+            {
+                aWriter.WriteLine(@"<H3>{0}</H3>", aSermonDetails.ItemArray[kTitleColumn].ToString());
+            }
+            aWriter.WriteLine(@"</div>");
+
+            aWriter.WriteLine(@"  <div class=""row"">");
+            aWriter.WriteLine(@"    <div class=""col-sm-3"" style=""background-color:lavender;"">");
+            aWriter.WriteLine(@"       <p class=""text-primary"">{0}</p>", sermonDate.ToString("d MMM yyyy"));
+            string scripture = aSermonDetails.ItemArray[kScriptureColumn].ToString();
+            if (scripture.Length > 0)
+            {
+                aWriter.WriteLine(@"       <p>{0}</p>", scripture);
+            }
+            aWriter.WriteLine(@"       <p>{0}</p>", aSermonDetails.ItemArray[kSpeakerColumn].ToString());
+            aWriter.WriteLine(@"    </div>");
+            aWriter.WriteLine(@"    <div class=""col-sm-1"">");
+            aWriter.WriteLine(@"    </div>");
+            aWriter.WriteLine(@"    <div class=""col-sm-8"">");
+            aWriter.WriteLine(@"      <p class=""text-info"">");
+            aWriter.WriteLine(@"        {0}", aSermonDetails.ItemArray[kDescriptionColumn].ToString());
+            aWriter.WriteLine(@"      </p>");
+            aWriter.WriteLine(@"      <p>");
+
+            string networkDriveLocation = Properties.Settings.Default.NetworkDriveLocation; // Where the MP3 resources are located on the internet
+                                                                                            //aWriter.WriteLine(@"    <a href=""{0}/{1}/{2}"" target=""_blank"" class=""btn btn-info"">", networkDriveLocation, aYear, audio);
+            aWriter.WriteLine(@"    <a href=""{1}/{2}"" target=""_blank"" class=""btn btn-info"">", networkDriveLocation, aYear, audio);
+            aWriter.WriteLine(@"      <span class=""glyphicon glyphicon-play""></span> Play");
+            aWriter.WriteLine(@"    </a>");
+
+            aWriter.WriteLine(@"      </p>");
+            DateTime duration;
+            string durationString = string.Empty;
+            if (DateTime.TryParse(aSermonDetails.ItemArray[kDurationColumn].ToString(), out duration))
+            {
+                aWriter.WriteLine(@"      <p class=""text-info"">");
+                aWriter.WriteLine(@"        duration: " + duration.ToLongTimeString());
+                aWriter.WriteLine(@"      </p>");
+            }
+            aWriter.WriteLine(@"    </div>");
+            aWriter.WriteLine(@"</div>");
+
+            aWriter.WriteLine(@"</div>");
         }
 
-        void ValidateAudio( string aAudio, string aYear )
+        bool ValidateAudio( string aAudio, string aYear )
         {
             string fullPath = Path.Combine( Properties.Settings.Default.LocalDriveLocation, aYear, aAudio );
-            if( !File.Exists( fullPath ) )
+            var valid = File.Exists(fullPath);
+            if ( !valid )
             {
                 iTextBoxStatus.Text += ( "File " + aAudio + " not present" + Environment.NewLine );
             }
+
+            return valid;
         }
 
         void iButtonOK_Click( object sender, EventArgs e )
