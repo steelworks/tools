@@ -75,9 +75,21 @@ namespace SermonPodcastPages
                     htmlWriter.WriteLine( "<BR>" );
                     //htmlWriter.WriteLine( @"<TABLE style=""width:800px"">" );
 
-                    foreach ( DataRow row in sheet.Rows )
+                    if (sheet.TableName == DateTime.Now.Year.ToString())
                     {
-                        WriteSermon( htmlWriter, sheet.TableName, row );
+                        htmlWriter.WriteLine(@"<div class=""well"">");
+                        htmlWriter.WriteLine("<H3>For the latest sermons, please visit our Podbean site</H3>");
+                        htmlWriter.WriteLine(@"    <a href=""https://bethelmacc.podbean.com/"" target=""_blank"" class=""btn btn-info"">");
+                        htmlWriter.WriteLine(@"      <span class=""glyphicon glyphicon-share-alt""></span> Bethel Macclesfield on Podbean");
+                        htmlWriter.WriteLine(@"    </a>");
+                        htmlWriter.WriteLine("</div>");
+                    }
+                    else
+                    {
+                        foreach (DataRow row in sheet.Rows)
+                        {
+                            WriteSermon(htmlWriter, sheet.TableName, row);
+                        }
                     }
 
                     //htmlWriter.WriteLine( "</TABLE>" );
